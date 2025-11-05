@@ -1,0 +1,4 @@
+maint_logs/
+maint_backups/
+*.tar.gz
+*.log

@@ -1,0 +1,44 @@
+cd ~/maint_suite/scripts
+cp -v backup.sh backup.sh.bak
+
+cat > backup.sh <<'FIXED'
+#!/bin/bash
+# Safer backup: create tar in /tmp, exclude backup dir, use sudo to read /etc, then move finished file
+set -euo pipefail
+source "$(dirname "$0")/lib_common.sh"
+
+LOG="backup.log"
+RETENTION_DAYS=7
+DATE=$(date +%F-%H%M)
+ARCHIVE_NAME="backup-$DATE.tar.gz"
+ARCHIVE_TMP="/tmp/$ARCHIVE_NAME"
+ARCHIVE="$BACKUPDIR/$ARCHIVE_NAME"
+
+# Directories to include (customize if you don't want /etc)
+SRC_DIRS=( "/etc" "$HOME" )
+
+# Exclude the backup directory so tar doesn't include the archive itself
+EXCLUDE="--exclude=$BACKUPDIR"
+
+# cleanup any left-over temp or target files for this timestamp
+[ -f "$ARCHIVE_TMP" ] && rm -f "$ARCHIVE_TMP"
+[ -f "$ARCHIVE" ] && rm -f "$ARCHIVE"
+
+log "$LOG" "Starting backup to $ARCHIVE (temp -> $ARCHIVE_TMP)"
+cmd_exists tar || { log "$LOG" "tar not found"; exit 2; }
+
+# use sudo so /etc and other root-owned files can be archived
+sudo tar $EXCLUDE -czf "$ARCHIVE_TMP" "${SRC_DIRS[@]}" 2>>"$(logfile_for "$LOG")" || { log "$LOG" "tar failed"; rm -f "$ARCHIVE_TMP"; exit 1; }
+
+# move finished archive to backup dir
+mv "$ARCHIVE_TMP" "$ARCHIVE"
+log "$LOG" "Backup completed: $ARCHIVE"
+
+# remove old backups
+log "$LOG" "Removing backups older than $RETENTION_DAYS days"
+find "$BACKUPDIR" -type f -name 'backup-*.tar.gz' -mtime +"$RETENTION_DAYS" -print -delete >>"$(logfile_for "$LOG")" 2>&1 || true
+log "$LOG" "Backup script finished"
+FIXED
+
+chmod +x backup.sh
+echo "backup.sh has been replaced (old copy: backup.sh.bak)"
