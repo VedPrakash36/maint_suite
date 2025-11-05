@@ -1,4 +1,9 @@
 # 🧰 Maintenance Suite – Bash Automation Toolkit
+![Bash](https://img.shields.io/badge/Bash-blue?logo=gnu-bash)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-orange?logo=ubuntu)
+![WSL](https://img.shields.io/badge/WSL-green?logo=windows)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 
 A simple yet powerful **system maintenance toolkit** written in **Bash** for Ubuntu/WSL environments.  
 This suite automates routine tasks such as system backups, log monitoring, and cleanup through modular scripts.
