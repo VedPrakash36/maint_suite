@@ -13,12 +13,12 @@ This suite automates routine tasks such as system backups, log monitoring, and c
 ## 📁 Project Structure
 maint_suite/
 ├── scripts/
-│ ├── backup.sh # Creates compressed backups safely
-│ ├── system_maint.sh # Performs updates and cleanup
-│ ├── log_monitor.sh # Checks logs for warnings/errors
-│ └── maint_menu.sh # Interactive menu for all scripts
-├── maint_logs/ # Log output directory
-├── maint_backups/ # Backup archive storage
+│ ├── backup.sh
+│ ├── system_maint.sh 
+│ ├── log_monitor.sh
+│ └── maint_menu.sh
+├── maint_logs/ 
+├── maint_backups/
 ├── LICENSE
 └── README.md
 ---
